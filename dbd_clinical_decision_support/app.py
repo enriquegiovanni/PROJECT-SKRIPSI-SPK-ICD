@@ -144,9 +144,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     if model is not None:
-        acc_val = metrics.get('accuracy', 0) * 100 if metrics else 0
-        rec_val = metrics.get('recall_a91', 0) * 100 if metrics else 0
-        st.markdown(f"""
+        st.markdown("""
         <div class='sidebar-info'>
             <div class='sidebar-info-label'>Status Model</div>
             <div class='sidebar-info-row'>
@@ -167,21 +165,6 @@ with st.sidebar:
             </div>
         </div>
         """, unsafe_allow_html=True)
-
-        if metrics:
-            st.markdown(f"""
-            <div class='sidebar-info' style='margin-top:0.5rem;'>
-                <div class='sidebar-info-label'>Performa Model</div>
-                <div class='sidebar-info-row'>
-                    <span class='sidebar-info-key'>Accuracy</span>
-                    <span class='sidebar-info-val' style='color:#93C5FD!important;'>{acc_val:.1f}%</span>
-                </div>
-                <div class='sidebar-info-row'>
-                    <span class='sidebar-info-key'>Recall A91</span>
-                    <span class='sidebar-info-val' style='color:#FCD34D!important;'>{rec_val:.1f}%</span>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
     else:
         st.markdown("""
         <div class='sidebar-info'>
@@ -192,11 +175,6 @@ with st.sidebar:
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div class='sidebar-footer'>
-        <p>CDSS DBD v1.0 &bull; RS Aulia<br>Metodologi CRISP-DM</p>
-    </div>
-    """, unsafe_allow_html=True)
 
 
 

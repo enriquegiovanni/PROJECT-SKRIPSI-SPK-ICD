@@ -47,6 +47,7 @@ load_css()
 # ── Load Model ──
 MODEL_PATH  = os.path.join(BASE_DIR, "models", "pipeline_dbd.pkl")
 FALLBACK    = os.path.join(BASE_DIR, "models", "decision_tree.pkl")
+METRICS_PATH = os.path.join(BASE_DIR, "models", "eval_metrics.pkl")
 
 @st.cache_resource(show_spinner=False)
 def load_model():
@@ -54,6 +55,12 @@ def load_model():
         return joblib.load(MODEL_PATH)
     if os.path.exists(FALLBACK):
         return joblib.load(FALLBACK)
+    return None
+
+@st.cache_resource(show_spinner=False)
+def load_metrics():
+    if os.path.exists(METRICS_PATH):
+        return joblib.load(METRICS_PATH)
     return None
 
 
@@ -96,32 +103,46 @@ with st.sidebar:
     elif selected_page == "Tentang Sistem":
         st.switch_page("pages/3_Tentang_Sistem.py")
 
-    # Referensi nilai normal
+    model = load_model()
+    metrics = load_metrics()
+
     st.markdown("""
     <div style='margin: 0.75rem 0 0.25rem;border-top:1px solid rgba(255,255,255,0.1);'></div>
-    <div class='sidebar-nav-label'>Nilai Normal Lab</div>
+    <div class='sidebar-nav-label'>Informasi Sistem</div>
     """, unsafe_allow_html=True)
 
-    normal_refs = [
-        ("Trombosit", "150.000–450.000 /μL"),
-        ("Hematokrit", "35–52 %"),
-        ("Hemoglobin", "10–18 g/dL"),
-        ("Leukosit", "4.000–11.000 /μL"),
-    ]
-
-    for name, ref in normal_refs:
-        st.markdown(f"""
-        <div class='sidebar-info-row' style='padding:0 1rem 0.3rem;'>
-            <span class='sidebar-info-key'>{name}</span>
-            <span class='sidebar-info-val'>{ref}</span>
+    if model is not None:
+        st.markdown("""
+        <div class='sidebar-info'>
+            <div class='sidebar-info-label'>Status Model</div>
+            <div class='sidebar-info-row'>
+                <span class='sidebar-info-key'>Model</span>
+                <span class='sidebar-info-val'>✅ Aktif</span>
+            </div>
+            <div class='sidebar-info-row'>
+                <span class='sidebar-info-key'>Dataset</span>
+                <span class='sidebar-info-val'>RS Aulia</span>
+            </div>
+            <div class='sidebar-info-row'>
+                <span class='sidebar-info-key'>Algoritma</span>
+                <span class='sidebar-info-val'>Decision Tree</span>
+            </div>
+            <div class='sidebar-info-row'>
+                <span class='sidebar-info-key'>Metodologi</span>
+                <span class='sidebar-info-val'>CRISP-DM</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div class='sidebar-info'>
+            <div style='font-size:0.82rem; color:#FCD34D; font-weight:600;'>⚠️ Model Belum Tersedia</div>
+            <div style='font-size:0.72rem; color:rgba(255,255,255,0.6); margin-top:0.3rem;'>
+                Jalankan: python train_model.py
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div class='sidebar-footer'>
-        <p>CDSS DBD v1.0 &bull; RS Aulia<br>Metodologi CRISP-DM</p>
-    </div>
-    """, unsafe_allow_html=True)
 
 
 
@@ -192,7 +213,7 @@ if not st.session_state.prediction_done:
     <div class='section-desc'>Lengkapi semua field bertanda * di bawah ini dengan benar.</div>
     """, unsafe_allow_html=True)
 
-    with st.form("form_prediksi", clear_on_submit=False):
+    with st.container():
 
         # ── Seksi 1: Data Demografis ──
         st.markdown("""
@@ -222,8 +243,9 @@ if not st.session_state.prediction_done:
         with col2:
             jenis_kelamin = st.selectbox(
                 label="Jenis Kelamin *",
-                options=["", "Laki-laki", "Perempuan"],
-                index=0,
+                options=["Laki-laki", "Perempuan"],
+                index=None,
+                placeholder="Pilih jenis kelamin",
                 help="Pilih jenis kelamin pasien",
                 key="input_jk"
             )
@@ -302,7 +324,7 @@ if not st.session_state.prediction_done:
         # ── Submit Button ──
         col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
         with col_btn2:
-            submitted = st.form_submit_button(
+            submitted = st.button(
                 "🔬 Prediksi Klasifikasi ICD-10",
                 type="primary",
                 use_container_width=True

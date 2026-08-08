@@ -41,6 +41,16 @@ load_css()
 
 # ── Load Metrics ──
 METRICS_PATH = os.path.join(BASE_DIR, "models", "eval_metrics.pkl")
+MODEL_PATH = os.path.join(BASE_DIR, "models", "pipeline_dbd.pkl")
+FALLBACK = os.path.join(BASE_DIR, "models", "decision_tree.pkl")
+
+@st.cache_resource(show_spinner=False)
+def load_model():
+    if os.path.exists(MODEL_PATH):
+        return joblib.load(MODEL_PATH)
+    if os.path.exists(FALLBACK):
+        return joblib.load(FALLBACK)
+    return None
 
 @st.cache_resource(show_spinner=False)
 def load_metrics():
@@ -88,39 +98,46 @@ with st.sidebar:
     elif selected_page == "Tentang Sistem":
         st.switch_page("pages/3_Tentang_Sistem.py")
 
-    # Info tambahan sidebar
+    model = load_model()
+    metrics_sidebar = load_metrics()
+
     st.markdown("""
     <div style='margin: 0.75rem 0 0.25rem;border-top:1px solid rgba(255,255,255,0.1);'></div>
-    <div class='sidebar-nav-label'>Info Dataset</div>
+    <div class='sidebar-nav-label'>Informasi Sistem</div>
     """, unsafe_allow_html=True)
 
-    metrics_sidebar = load_metrics()
-    if metrics_sidebar:
-        n_total = metrics_sidebar.get('n_total', 'N/A')
-        n_train = metrics_sidebar.get('n_train', 'N/A')
-        n_test  = metrics_sidebar.get('n_test', 'N/A')
-        st.markdown(f"""
+    if model is not None:
+        st.markdown("""
         <div class='sidebar-info'>
+            <div class='sidebar-info-label'>Status Model</div>
             <div class='sidebar-info-row'>
-                <span class='sidebar-info-key'>Total Sampel</span>
-                <span class='sidebar-info-val'>{n_total}</span>
+                <span class='sidebar-info-key'>Model</span>
+                <span class='sidebar-info-val'>✅ Aktif</span>
             </div>
             <div class='sidebar-info-row'>
-                <span class='sidebar-info-key'>Training</span>
-                <span class='sidebar-info-val'>{n_train}</span>
+                <span class='sidebar-info-key'>Dataset</span>
+                <span class='sidebar-info-val'>RS Aulia</span>
             </div>
             <div class='sidebar-info-row'>
-                <span class='sidebar-info-key'>Testing</span>
-                <span class='sidebar-info-val'>{n_test}</span>
+                <span class='sidebar-info-key'>Algoritma</span>
+                <span class='sidebar-info-val'>Decision Tree</span>
+            </div>
+            <div class='sidebar-info-row'>
+                <span class='sidebar-info-key'>Metodologi</span>
+                <span class='sidebar-info-val'>CRISP-DM</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div class='sidebar-info'>
+            <div style='font-size:0.82rem; color:#FCD34D; font-weight:600;'>⚠️ Model Belum Tersedia</div>
+            <div style='font-size:0.72rem; color:rgba(255,255,255,0.6); margin-top:0.3rem;'>
+                Jalankan: python train_model.py
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div class='sidebar-footer'>
-        <p>CDSS DBD v1.0 &bull; RS Aulia<br>Metodologi CRISP-DM</p>
-    </div>
-    """, unsafe_allow_html=True)
 
 
 
