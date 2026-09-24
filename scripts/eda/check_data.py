@@ -1,7 +1,12 @@
 import sys
+from pathlib import Path
+
 sys.stdout.reconfigure(encoding='utf-8')
 import re, numpy as np, pandas as pd
 from sklearn.impute import SimpleImputer
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+DATASET_PATH = ROOT_DIR / "data" / "raw" / "Data_Lab_Penyakit_DBD_RS_Aulia.xlsx"
 
 def parse_usia(teks):
     if pd.isna(teks): return np.nan
@@ -20,7 +25,7 @@ def parse_nilai_lab(teks):
     cocok = re.search(r'([\d]+\.?[\d]*)', teks)
     return float(cocok.group(1)) if cocok else np.nan
 
-df_raw = pd.read_excel('Data_Lab_Penyakit_DBD_RS_Aulia.xlsx')
+df_raw = pd.read_excel(DATASET_PATH)
 print(f"DATA RAW  : {len(df_raw)} baris, {df_raw.shape[1]} kolom")
 print(f"Kolom     : {list(df_raw.columns)}")
 print()

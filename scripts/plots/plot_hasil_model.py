@@ -5,6 +5,8 @@ Visualisasi lengkap semua hasil evaluasi model Decision Tree DBD
 Light theme — siap untuk laporan/skripsi
 """
 import sys
+from pathlib import Path
+
 sys.stdout.reconfigure(encoding='utf-8')
 
 import joblib
@@ -17,7 +19,9 @@ from matplotlib.patches import FancyBboxPatch
 import matplotlib.ticker as mticker
 
 # ── Load Metrics ──────────────────────────────────────────────
-m = joblib.load(r'dbd_clinical_decision_support\models\eval_metrics.pkl')
+ROOT_DIR = Path(__file__).resolve().parents[2]
+MODEL_PATH = ROOT_DIR / "dbd_clinical_decision_support" / "models" / "eval_metrics.pkl"
+m = joblib.load(MODEL_PATH)
 
 # ── Warna & Style ─────────────────────────────────────────────
 BG      = '#FFFFFF'
@@ -361,7 +365,8 @@ for i, (bg, tc) in enumerate(row_colors):
         if j == 0:
             cell.set_text_props(fontweight='bold', color=tc)
 
-plt.savefig('hasil_model_lengkap.png', bbox_inches='tight',
+OUTPUT_PATH = ROOT_DIR / "outputs" / "plots" / "hasil_model_lengkap.png"
+plt.savefig(OUTPUT_PATH, bbox_inches='tight',
             facecolor=BG, dpi=150)
 plt.close()
 print("Saved: hasil_model_lengkap.png")

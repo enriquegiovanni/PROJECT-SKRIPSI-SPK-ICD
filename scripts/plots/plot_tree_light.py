@@ -5,6 +5,8 @@ Ilustrasi struktur pemisahan Decision Tree — Light Theme
 Load model dari pipeline_dbd.pkl yang sudah tersimpan.
 """
 import sys
+from pathlib import Path
+
 sys.stdout.reconfigure(encoding='utf-8')
 
 import warnings, joblib
@@ -18,9 +20,11 @@ from sklearn.tree import _tree
 warnings.filterwarnings('ignore')
 
 # ── Load model pipeline ──────────────────────────────────────
-MODEL_PATH = r'dbd_clinical_decision_support\models\pipeline_dbd.pkl'
-pipeline   = joblib.load(MODEL_PATH)
-model      = pipeline.named_steps['classifier']
+ROOT_DIR = Path(__file__).resolve().parents[2]
+MODEL_PATH = ROOT_DIR / "dbd_clinical_decision_support" / "models" / "pipeline_dbd.pkl"
+OUTPUT_PATH = ROOT_DIR / "outputs" / "plots" / "decision_tree_light.png"
+pipeline = joblib.load(MODEL_PATH)
+model = pipeline.named_steps['classifier']
 print(f"Model loaded — Depth={model.get_depth()} | Leaves={model.get_n_leaves()}")
 
 FEATURE_NAMES = ['Usia', 'Trombosit', 'Hematokrit', 'Hemoglobin', 'Leukosit', 'Jenis Kelamin']
@@ -241,7 +245,6 @@ ax.set_title(
 )
 
 plt.tight_layout(pad=1.5)
-out = 'decision_tree_light.png'
-plt.savefig(out, bbox_inches='tight', facecolor=BG, dpi=150)
+plt.savefig(OUTPUT_PATH, bbox_inches='tight', facecolor=BG, dpi=150)
 plt.close()
-print(f"Saved: {out}")
+print(f"Saved: {OUTPUT_PATH}")

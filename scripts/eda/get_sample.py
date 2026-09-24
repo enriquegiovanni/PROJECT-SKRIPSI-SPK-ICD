@@ -1,6 +1,10 @@
+from pathlib import Path
 import pandas as pd
 
-df = pd.read_excel('Data_Lab_Penyakit_DBD_RS_Aulia.xlsx')
+ROOT_DIR = Path(__file__).resolve().parents[2]
+DATASET_PATH = ROOT_DIR / "data" / "raw" / "Data_Lab_Penyakit_DBD_RS_Aulia.xlsx"
+
+df = pd.read_excel(DATASET_PATH)
 a91_df = df[df['kode ICD'] == 'A91']
 if not a91_df.empty:
     sample = a91_df.iloc[0]

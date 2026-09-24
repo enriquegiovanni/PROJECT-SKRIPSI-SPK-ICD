@@ -4,6 +4,8 @@ plot_tree.py
 Script untuk menghasilkan visualisasi Decision Tree model DBD
 """
 import sys
+from pathlib import Path
+
 sys.stdout.reconfigure(encoding='utf-8')
 
 import re
@@ -23,8 +25,9 @@ from imblearn.over_sampling import SMOTE
 
 warnings.filterwarnings('ignore')
 
-DATASET_PATH = r"Data_Lab_Penyakit_DBD_RS_Aulia.xlsx"
-OUTPUT_PATH  = r"decision_tree_dbd.png"
+ROOT_DIR = Path(__file__).resolve().parents[2]
+DATASET_PATH = ROOT_DIR / "data" / "raw" / "Data_Lab_Penyakit_DBD_RS_Aulia.xlsx"
+OUTPUT_PATH = ROOT_DIR / "outputs" / "plots" / "decision_tree_dbd.png"
 RANDOM_STATE = 42
 
 # ── Parsing ───────────────────────────────────────────────────

@@ -5,6 +5,8 @@ Membuat ilustrasi struktur pemisahan Decision Tree yang bersih dan informatif
 menggunakan matplotlib dengan custom node styling.
 """
 import sys
+from pathlib import Path
+
 sys.stdout.reconfigure(encoding='utf-8')
 
 import re, warnings
@@ -22,6 +24,9 @@ from sklearn.metrics import recall_score
 from imblearn.over_sampling import SMOTE
 
 warnings.filterwarnings('ignore')
+ROOT_DIR = Path(__file__).resolve().parents[2]
+DATASET_PATH = ROOT_DIR / "data" / "raw" / "Data_Lab_Penyakit_DBD_RS_Aulia.xlsx"
+OUTPUT_PATH = ROOT_DIR / "outputs" / "plots" / "decision_tree_ilustrasi.png"
 RANDOM_STATE = 42
 
 # ── Parsing ───────────────────────────────────────────────────
@@ -40,7 +45,7 @@ def parse_lab(t):
 
 # ── Preprocessing ─────────────────────────────────────────────
 print("Memuat & preprocessing data...")
-df_raw = pd.read_excel('Data_Lab_Penyakit_DBD_RS_Aulia.xlsx')
+df_raw = pd.read_excel(DATASET_PATH)
 cols = {
     'Usia (tahun)': 'Usia',
     'Jenis Kelamin\n(L/P)': 'Jenis_Kelamin',
@@ -289,7 +294,6 @@ ax.set_title(
 )
 
 plt.tight_layout(pad=1.5)
-out = 'decision_tree_ilustrasi.png'
-plt.savefig(out, bbox_inches='tight', facecolor=BG, dpi=150)
+plt.savefig(OUTPUT_PATH, bbox_inches='tight', facecolor=BG, dpi=150)
 plt.close()
-print(f"Saved: {out}")
+print(f"Saved: {OUTPUT_PATH}")

@@ -1,4 +1,5 @@
 # Manipulasi dan analisis data
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import re
@@ -30,10 +31,14 @@ pd.set_option('display.max_columns', None)
 sns.set_style('whitegrid')
 plt.rcParams['figure.facecolor'] = 'white'
 
+ROOT_DIR = Path(__file__).resolve().parents[2]
+DATASET_PATH = ROOT_DIR / "data" / "raw" / "Data_Lab_Penyakit_DBD_RS_Aulia.xlsx"
+OUTPUT_DIR = ROOT_DIR / "outputs" / "plots"
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 RANDOM_STATE = 42
 print("Seluruh library berhasil diimpor.")
 
-df_raw = pd.read_excel('Data_Lab_Penyakit_DBD_RS_Aulia.xlsx')
+df_raw = pd.read_excel(DATASET_PATH)
 print(f"Jumlah baris  : {df_raw.shape[0]}")
 print(f"Jumlah kolom  : {df_raw.shape[1]}")
 df_raw.shape
@@ -82,7 +87,7 @@ axes[1].pie(target_counts.values, labels=target_counts.index, autopct='%1.2f%%',
 axes[1].set_title('Proporsi Pasien Berdasarkan Kode ICD', fontsize=12, fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('distribusi_target.png', dpi=150, bbox_inches='tight')
+plt.savefig(OUTPUT_DIR / 'distribusi_target.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 kolom_dipilih = {
@@ -195,7 +200,7 @@ for i, kolom in enumerate(kolom_boxplot):
     axes[i].set_ylabel('')
 
 plt.tight_layout()
-plt.savefig('boxplot_outlier.png', dpi=150, bbox_inches='tight')
+plt.savefig(OUTPUT_DIR / 'boxplot_outlier.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # Pemeriksaan nilai yang secara klinis tidak mungkin (nol atau negatif)
@@ -267,7 +272,7 @@ for i, v in enumerate(sesudah.values):
     axes[1].text(i, v + 10, str(v), ha='center', fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('smote_distribusi.png', dpi=150, bbox_inches='tight')
+plt.savefig(OUTPUT_DIR / 'smote_distribusi.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 param_grid = {
@@ -315,7 +320,7 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['A90', 'A91']
 disp.plot(ax=ax, cmap='Blues', colorbar=False, values_format='d')
 ax.set_title('Confusion Matrix - Data Testing', fontweight='bold')
 plt.tight_layout()
-plt.savefig('confusion_matrix.png', dpi=150, bbox_inches='tight')
+plt.savefig(OUTPUT_DIR / 'confusion_matrix.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 tn, fp, fn, tp = cm.ravel()
@@ -371,7 +376,7 @@ plt.title('Feature Importance - Decision Tree', fontweight='bold')
 plt.xlabel('Tingkat Kepentingan Fitur')
 plt.ylabel('')
 plt.tight_layout()
-plt.savefig('feature_importance.png', dpi=150, bbox_inches='tight')
+plt.savefig(OUTPUT_DIR / 'feature_importance.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 kedalaman_model = model_terbaik.get_depth()
@@ -384,7 +389,7 @@ plot_tree(model_terbaik, max_depth=3, feature_names=X.columns, class_names=['A90
           filled=True, rounded=True, fontsize=10, proportion=False)
 plt.title('Visualisasi Decision Tree (3 Tingkat Pertama)', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('decision_tree.png', dpi=150, bbox_inches='tight')
+plt.savefig(OUTPUT_DIR / 'decision_tree.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 train_pred = model_terbaik.predict(X_train_smote)
@@ -439,7 +444,7 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm_iterasi, display_labels=['A90'
 disp.plot(ax=ax, cmap='Greens', colorbar=False, values_format='d')
 ax.set_title('Confusion Matrix - Model Hasil Iterasi', fontweight='bold')
 plt.tight_layout()
-plt.savefig('confusion_matrix_iterasi.png', dpi=150, bbox_inches='tight')
+plt.savefig(OUTPUT_DIR / 'confusion_matrix_iterasi.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 perbandingan_model = pd.DataFrame({
