@@ -1,29 +1,27 @@
-# SPK Klasifikasi DBD - ICD-10 A90 & A91
+# Sistem Pendukung Keputusan Klinis untuk Klasifikasi DBD - ICD-10 A90 & A91
 
 Sistem Pendukung Keputusan Klinis (Clinical Decision Support System) berbasis Streamlit untuk klasifikasi pasien Demam Berdarah Dengue (DBD) berdasarkan kode diagnosis ICD-10 A90 dan A91.
 
-Project ini dikembangkan untuk kebutuhan penelitian/skripsi dengan pendekatan CRISP-DM dan model Decision Tree. Aplikasi ini berfungsi sebagai alat bantu keputusan klinis, bukan pengganti diagnosis dokter.
 
-## Fitur utama
 
-- Prediksi klasifikasi pasien DBD berdasarkan fitur laboratorium
-- Input data pasien secara interaktif di web dashboard
-- Output hasil prediksi, probabilitas, dan confidence score
-- Visualisasi evaluasi model
-- Interpretasi klinis untuk klasifikasi A90 dan A91
-- Antarmuka dengan desain yang lebih rapi dan mudah dipahami
+## Ringkasan Proyek
 
-## Teknologi yang digunakan
+Penelitian ini membangun model klasifikasi pasien Demam Berdarah Dengue (DBD) ke dalam kode diagnosis ICD-10 A90 dan A91 berdasarkan data klinis dan laboratorium. Aplikasi berfungsi sebagai *Clinical Decision Support System* (CDSS), bukan pengganti keputusan tenaga medis.
 
-- Python
-- Streamlit
-- Pandas
-- NumPy
-- Scikit-learn
-- Joblib
-- Plotly
-- Matplotlib
-- imbalanced-learn
+| Item | Detail |
+| --- | --- |
+| Peneliti | Enrique Giovanni Battista Djou |
+| Metodologi | CRISP-DM |
+| Algoritma | Decision Tree; pemilihan model membandingkan SMOTE dan `class_weight` berdasarkan *macro recall* |
+| Target klasifikasi | ICD-10 A90 (Dengue Fever) dan A91 (Dengue Hemorrhagic Fever) |
+| Dataset | Data klinis dan laboratorium pasien DBD RS Aulia |
+| Fitur | 6 fitur: usia, jenis kelamin, trombosit, hematokrit, hemoglobin, dan leukosit |
+
+## Ketidakseimbangan Data
+
+Distribusi jumlah pasien pada kelas ICD-10 A90 dan A91 tidak seimbang. Kondisi ini dapat membuat model lebih cenderung memprediksi kelas dengan jumlah sampel lebih banyak, sehingga kinerja pada kelas yang lebih sedikit perlu diperhatikan.
+
+Untuk menangani hal tersebut, proses pelatihan membandingkan dua pendekatan pada model Decision Tree: oversampling kelas minoritas menggunakan SMOTE dan pemberian bobot kelas menggunakan `class_weight`. Data dibagi menjadi data latih dan data uji terlebih dahulu; SMOTE hanya diterapkan pada data latih agar data uji tetap terpisah dan tidak ikut digunakan dalam proses penyeimbangan. Model terbaik dipilih berdasarkan nilai *macro recall*, yang menghitung recall tiap kelas secara seimbang.
 
 ## Struktur proyek
 
@@ -74,7 +72,6 @@ PROJECT SKRIPSI SPK ICD/
 └── .git/
 ```
 
-> Catatan: Folder utama aplikasi tetap berada di `dbd_clinical_decision_support/`. Sementara file penelitian, dataset, notebook, dan script eksplorasi dipindahkan ke folder yang lebih rapi agar repositori GitHub terlihat lebih profesional.
 
 ## Persiapan lingkungan
 
@@ -106,21 +103,11 @@ python train_model.py
 
 Script ini akan membaca dataset, melatih model Decision Tree, dan menyimpan hasil model serta metrik evaluasi ke folder `models/`.
 
-## Target klasifikasi
-
-- A90 = Dengue Fever
-- A91 = Dengue Hemorrhagic Fever
-
-## Catatan penting
+## Disclaimer
 
 - Aplikasi ini merupakan sistem pendukung keputusan klinis.
 - Hasil prediksi bukan keputusan medis final.
 - Keputusan akhir tetap ditentukan oleh tenaga medis yang berwenang.
 
-## Lisensi
-
-Belum ditentukan secara eksplisit. Silakan sesuaikan lisensi sesuai kebutuhan institusi atau pembimbing jika project ini akan dipublikasikan atau dikembangkan lebih lanjut.
-
-## Penanggung jawab / pengembang
-
-Project ini dibuat sebagai bagian dari skripsi / tugas akhir terkait klasifikasi ICD-10 DBD menggunakan Decision Tree.
+## Link
+https://spk-klasifikasi-icd.streamlit.app
