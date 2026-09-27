@@ -109,5 +109,14 @@ Script ini akan membaca dataset, melatih model Decision Tree, dan menyimpan hasi
 - Hasil prediksi bukan keputusan medis final.
 - Keputusan akhir tetap ditentukan oleh tenaga medis yang berwenang.
 
+## Lisensi
+
+Belum ditentukan secara eksplisit. Silakan sesuaikan lisensi sesuai kebutuhan institusi atau pembimbing jika project ini akan dipublikasikan atau dikembangkan lebih lanjut.
+
+## Penanggung jawab / pengembang
+
+Project ini dibuat sebagai bagian dari skripsi / tugas akhir terkait klasifikasi ICD-10 DBD menggunakan Decision Tree.
+
 ## Link
+
 https://spk-klasifikasi-icd.streamlit.app
